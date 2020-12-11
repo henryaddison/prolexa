@@ -32,6 +32,7 @@ stored_rule(1,[(person(anne):-true)]).
 prolexa_cli:-
 	read(Input),
 	( Input=stop -> true
+	; Input=end_of_file -> true
 	; otherwise ->
 		handle_utterance(1,Input,Output),
 		writeln(Output),
