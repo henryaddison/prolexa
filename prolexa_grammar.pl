@@ -53,10 +53,23 @@ sword --> [that].
 % most of this follows Simply Logical, Chapter 7
 sentence1(C) --> determiner(N,M1,M2,C),noun(N,M1),verb_phrase(N,M2).
 sentence1([(L:-true)]) --> proper_noun(N,X),verb_phrase(N,X=>L).
+sentence1([(VM:-AM,NM)]) --> adjective(N, X=>AM), noun(N, X=>NM), verb_phrase(N, X=>VM).
+sentence1([(M2:-M1)]) --> noun(p,X=>M1),verb_phrase(p,X=>M2).
+sentence1(C) --> conditional(C).
+
+conditional([(H:-B)]) --> [if, a, person], verb_phrase(s, X=>B), [then, they], verb_phrase(p, X=>H).
 
 verb_phrase(s,M) --> [is],property(s,M).
 verb_phrase(p,M) --> [are],property(p,M).
 verb_phrase(N,M) --> iverb(N,M).
+verb_phrase(N,M) --> modal_phrase(N, M).
+verb_phrase(N,M) --> negated_modal_phrase(N, M).
+
+modal_phrase(_N, X=>has_ability(X, P)) --> [can, do], noun(s, Y=>Lit), {Lit=..[P,Y]}.
+modal_phrase(_N, X=>has_ability(X, P)) --> [can], iverb(p, Y=>Lit), {Lit=..[P,Y]}.
+
+negated_modal_phrase(_N, X=>not(has_ability(X, P))) --> [cannot, do], noun(s, Y=>Lit), {Lit=..[P,Y]}.
+negated_modal_phrase(_N, X=>not(has_ability(X, P))) --> [cannot], iverb(p, Y=>Lit), {Lit=..[P,Y]}.
 
 property(N,M) --> adjective(N,M).
 property(s,M) --> [a],noun(s,M).
