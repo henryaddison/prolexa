@@ -107,7 +107,7 @@ command(g(rr(A),A)) --> thanks.
 %	command(g(true,<response>)) --> <sentence>.
 % maps specific input sentences to specific responses.
 
-command(g(true,"I can do a little bit of logical reasoning. You can talk with me about humans and birds.")) --> [what,can,you,do,for,me,minerva].
+command(g(true,"I can do a little bit of logical reasoning. You can talk with me about Harry Potter and Muggles.")) --> [what,can,you,do,for,me,minerva].
 %command(g(true,"Your middle name is Adriaan")) --> [what,is,my,middle,name].
 %command(g(true,"Today you can find out about postgraduate study at the University of Bristol. This presentation is about the Centre for Doctoral Training in Interactive Artificial Intelligence")) --> today.
 %command(g(true,"The presenter is the Centre Director, Professor Peter Flach")) --> todaysspeaker.
