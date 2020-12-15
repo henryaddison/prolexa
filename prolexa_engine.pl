@@ -3,7 +3,7 @@
 %		prove_question/3,		% main question-answering engine
 %		explain_question/3,		% extended version that constructs a proof tree
 %		known_rule/2,			% test if a rule can be deduced from stored rules
-%		all_rules/1,			% collect all stored rules 
+%		all_rules/1,			% collect all stored rules
 %		all_answers/2,			% everything that can be proved about a particular Proper Noun
 %	]).
 
@@ -19,7 +19,7 @@ prove_question(Query,SessionId,Answer):-
 		phrase(sentence(Clauses),AnswerAtomList),
 		atomics_to_string(AnswerAtomList," ",Answer)
 	; Answer = 'Sorry, I don\'t think this is the case'
-	).	
+	).
 
 % two-argument version that can be used in maplist/3 (see all_answers/2)
 prove_question(Query,Answer):-
@@ -29,7 +29,7 @@ prove_question(Query,Answer):-
 		phrase(sentence(Clauses),AnswerAtomList),
 		atomics_to_string(AnswerAtomList," ",Answer)
 	; Answer = ""
-	).	
+	).
 
 
 %%% Extended version of prove_question/3 that constructs a proof tree %%%
@@ -99,7 +99,7 @@ transform(A,[(A:-true)]).
 
 %%% Two more commands: all_rules/1 and all_answers/2
 
-% collect all stored rules 
+% collect all stored rules
 all_rules(Answer):-
 	findall(R,prolexa:stored_rule(_ID,R),Rules),
 	maplist(rule2message,Rules,Messages),
