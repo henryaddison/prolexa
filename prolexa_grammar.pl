@@ -16,18 +16,9 @@ iverb(s,M)			--> [Verb_s], {pred2gr(_P,1,v/Verb,M),verb_p2s(Verb,Verb_s)}.
 iverb(p,M)			--> [Verb],   {pred2gr(_P,1,v/Verb,M)}.
 
 % unary predicates for adjectives, nouns and verbs
-pred(human,   1,[a/human,n/human]).
-pred(mortal,  1,[a/mortal,n/mortal]).
-%pred(man,     1,[a/male,n/man]).
-%pred(woman,   1,[a/female,n/woman]).
-%pred(married, 1,[a/married]).
-%pred(bachelor,1,[n/bachelor]).
-%pred(mammal,  1,[n/mammal]).
-pred(bird,    1,[n/bird]).
-%pred(bat,     1,[n/bat]).
-pred(penguin, 1,[n/penguin]).
-pred(sparrow, 1,[n/sparrow]).
-pred(fly,     1,[v/fly]).
+pred(muggle,   1,[n/muggle]).
+pred(vanish,     1,[v/vanish]).
+pred(magic,  1,[a/magic,n/magic]).
 
 pred2gr(P,1,C/W,X=>Lit):-
 	pred(P,1,L),
@@ -37,14 +28,20 @@ pred2gr(P,1,C/W,X=>Lit):-
 noun_s2p(Noun_s,Noun_p):-
 	( Noun_s=woman -> Noun_p=women
 	; Noun_s=man -> Noun_p=men
+	; Noun_s=person -> Noun_p=people
 	; atom_concat(Noun_s,s,Noun_p)
 	).
 
 verb_p2s(Verb_p,Verb_s):-
-	( Verb_p=fly -> Verb_s=flies
+	( Verb_p=vanish -> Verb_s=vanishes
 	; 	atom_concat(Verb_p,s,Verb_s)
 	).
 
+%%% lexicon, proper nouns %%%
+
+proper_noun(s,harry_potter) --> [harry].
+proper_noun(s,harry_potter) --> [harry, potter].
+proper_noun(s,mr_dursley) --> [mr, dursley].
 
 %%% sentences %%%
 
@@ -69,10 +66,6 @@ determiner(s,X=>B,X=>H,[(H:-B)]) --> [every].
 determiner(p,X=>B,X=>H,[(H:-B)]) --> [all].
 %determiner(p,X=>B,X=>H,[(H:-B)]) --> [].
 %determiner(p, sk=>H1, sk=>H2, [(H1:-true),(H2 :- true)]) -->[some].
-
-proper_noun(s,tweety) --> [tweety].
-proper_noun(s,peter) --> [peter].
-
 
 %%% questions %%%
 
