@@ -21,9 +21,6 @@ pred(wounded, 1,[a/wounded]).
 pred(fly,     1,[v/fly]).
 pred(ostrich,     1,[n/ostrich]).
 pred(abnormal,     1,[a/abnormal]).
-pred(muggle,   1,[n/muggle]).
-pred(vanish,     1,[v/vanish]).
-pred(magic,  1,[a/magic,n/magic]).
 
 pred2gr(P,1,C/W,X=>Lit):-
 	pred(P,1,L),
@@ -33,6 +30,8 @@ pred2gr(P,1,C/W,X=>Lit):-
 noun_s2p(Noun_s,Noun_p):-
 	( Noun_s=woman -> Noun_p=women
 	; Noun_s=man -> Noun_p=men
+	; Noun_s=bird -> Noun_p=birds
+	; Noun_s=ostrich -> Noun_p=ostriches
 	; atom_concat(Noun_s,s,Noun_p)
 	).
 
@@ -45,6 +44,7 @@ verb_p2s(Verb_p,Verb_s):-
 %%% sentences %%%
 
 sentence(C) --> sword,sentence1(C).
+sentence(C) --> sword,sentence2(C).
 
 sword --> [].
 sword --> [that].
@@ -54,16 +54,20 @@ sentence1(C) --> determiner(N,M1,M2,C),noun(N,M1),verb_phrase(N,M2).
 sentence1([(L:-true)]) --> proper_noun(N,X),verb_phrase(N,X=>L).
 sentence1(C) --> conditional(C).
 
+sentence2([(L1:-true),(L2:-true)]) --> proper_noun(N,X),verb_phrases(N,X=>L1,X=>L2).
+
 conditional([(H:-B)]) --> if_somebody, verb_phrase(s, X=>B), [then, they], verb_phrase(p, X=>H).
+conditional2([(H:-B1,B2)]) --> if_somebody, verb_phrases(s, X=>B1, X=>B2), [then, they], verb_phrase(p, X=>H).
 
 if_somebody --> [if, a, person].
 if_somebody --> [if, someone].
 if_somebody --> [if, somebody].
 
 verb_phrase(s,M) --> [is],property(s,M).
-verb_phrase(s,M) --> [is],property(s,M),[and],property(s,M).
 verb_phrase(p,M) --> [are],property(p,M).
 verb_phrase(N,M) --> iverb(N,M).
+
+verb_phrases(s,M1,M2) --> [is],two_property(s,M1,M2).
 
 modal_phrase(_N, X=>has_ability(X, P)) --> [can, do], noun(s, Y=>Lit), {Lit=..[P,Y]}.
 modal_phrase(_N, X=>has_ability(X, P)) --> [can], iverb(p, Y=>Lit), {Lit=..[P,Y]}.
@@ -76,6 +80,10 @@ property(N,M) --> adjective(N,M).
 property(s,M) --> [a],noun(s,M).
 property(s,M) --> [an],noun(s,M).
 property(p,M) --> noun(p,M).
+property(p,M) --> [a],noun(s,M).
+property(p,M) --> [an],noun(s,M).
+
+two_property(s,M1,M2) --> property(s,M1),[and],property(s,M2).
 
 determiner(s,X=>B,X=>H,[(H:-B)]) --> [every].
 determiner(p,X=>B,X=>H,[(H:-B)]) --> [all].
