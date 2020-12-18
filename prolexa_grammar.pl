@@ -16,18 +16,14 @@ iverb(s,M)			--> [Verb_s], {pred2gr(_P,1,v/Verb,M),verb_p2s(Verb,Verb_s)}.
 iverb(p,M)			--> [Verb],   {pred2gr(_P,1,v/Verb,M)}.
 
 % unary predicates for adjectives, nouns and verbs
-pred(human,   1,[a/human,n/human]).
-pred(mortal,  1,[a/mortal,n/mortal]).
-%pred(man,     1,[a/male,n/man]).
-%pred(woman,   1,[a/female,n/woman]).
-%pred(married, 1,[a/married]).
-%pred(bachelor,1,[n/bachelor]).
-%pred(mammal,  1,[n/mammal]).
-pred(bird,    1,[n/bird]).
-%pred(bat,     1,[n/bat]).
-pred(penguin, 1,[n/penguin]).
-pred(sparrow, 1,[n/sparrow]).
+pred(bird, 1,[n/bird]).
+pred(wounded, 1,[a/wounded]).
 pred(fly,     1,[v/fly]).
+pred(ostrich,     1,[n/ostrich]).
+pred(abnormal,     1,[a/abnormal]).
+pred(muggle,   1,[n/muggle]).
+pred(vanish,     1,[v/vanish]).
+pred(magic,  1,[a/magic,n/magic]).
 
 pred2gr(P,1,C/W,X=>Lit):-
 	pred(P,1,L),
@@ -56,13 +52,29 @@ sword --> [that].
 % most of this follows Simply Logical, Chapter 7
 sentence1(C) --> determiner(N,M1,M2,C),noun(N,M1),verb_phrase(N,M2).
 sentence1([(L:-true)]) --> proper_noun(N,X),verb_phrase(N,X=>L).
+sentence1(C) --> conditional(C).
+
+conditional([(H:-B)]) --> if_somebody, verb_phrase(s, X=>B), [then, they], verb_phrase(p, X=>H).
+
+if_somebody --> [if, a, person].
+if_somebody --> [if, someone].
+if_somebody --> [if, somebody].
 
 verb_phrase(s,M) --> [is],property(s,M).
+verb_phrase(s,M) --> [is],property(s,M),[and],property(s,M).
 verb_phrase(p,M) --> [are],property(p,M).
 verb_phrase(N,M) --> iverb(N,M).
 
+modal_phrase(_N, X=>has_ability(X, P)) --> [can, do], noun(s, Y=>Lit), {Lit=..[P,Y]}.
+modal_phrase(_N, X=>has_ability(X, P)) --> [can], iverb(p, Y=>Lit), {Lit=..[P,Y]}.
+
+negated_modal_phrase(_N, X=>not(has_ability(X, P))) --> [cannot, do], noun(s, Y=>Lit), {Lit=..[P,Y]}.
+negated_modal_phrase(_N, X=>not(has_ability(X, P))) --> [cannot], iverb(p, Y=>Lit), {Lit=..[P,Y]}.
+
+
 property(N,M) --> adjective(N,M).
 property(s,M) --> [a],noun(s,M).
+property(s,M) --> [an],noun(s,M).
 property(p,M) --> noun(p,M).
 
 determiner(s,X=>B,X=>H,[(H:-B)]) --> [every].
@@ -70,8 +82,11 @@ determiner(p,X=>B,X=>H,[(H:-B)]) --> [all].
 %determiner(p,X=>B,X=>H,[(H:-B)]) --> [].
 %determiner(p, sk=>H1, sk=>H2, [(H1:-true),(H2 :- true)]) -->[some].
 
-proper_noun(s,tweety) --> [tweety].
-proper_noun(s,peter) --> [peter].
+
+proper_noun(s,colin) --> [colin].
+proper_noun(s,dave) --> [dave].
+proper_noun(s,bill) --> [bill].
+proper_noun(s,arthur) --> [arthur].
 
 
 %%% questions %%%
