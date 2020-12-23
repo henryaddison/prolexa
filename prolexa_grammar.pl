@@ -21,6 +21,9 @@ pred(wounded, 1,[a/wounded]).
 pred(fly,     1,[v/fly]).
 pred(ostrich,     1,[n/ostrich]).
 pred(abnormal,     1,[a/abnormal]).
+pred(muggle,   1,[n/muggle]).
+pred(vanish,     1,[v/vanish]).
+pred(magic,  1,[a/magic,n/magic]).
 
 pred2gr(P,1,C/W,X=>Lit):-
 	pred(P,1,L),
@@ -32,14 +35,25 @@ noun_s2p(Noun_s,Noun_p):-
 	; Noun_s=man -> Noun_p=men
 	; Noun_s=bird -> Noun_p=birds
 	; Noun_s=ostrich -> Noun_p=ostriches
+	; Noun_s=person -> Noun_p=people
 	; atom_concat(Noun_s,s,Noun_p)
 	).
 
 verb_p2s(Verb_p,Verb_s):-
-	( Verb_p=fly -> Verb_s=flies
+	( Verb_p=vanish -> Verb_s=vanishes
 	; 	atom_concat(Verb_p,s,Verb_s)
 	).
 
+%%% lexicon, proper nouns %%%
+
+proper_noun(s,harry_potter) --> [harry].
+proper_noun(s,harry_potter) --> [harry, potter].
+proper_noun(s,mr_dursley) --> [mr, dursley].
+
+proper_noun(s,colin) --> [colin].
+proper_noun(s,dave) --> [dave].
+proper_noun(s,bill) --> [bill].
+proper_noun(s,arthur) --> [arthur].
 
 %%% sentences %%%
 
@@ -62,10 +76,21 @@ conditional2([(H:-B1,B2)]) --> if_somebody, verb_phrases(s, X=>B1, X=>B2), [then
 if_somebody --> [if, a, person].
 if_somebody --> [if, someone].
 if_somebody --> [if, somebody].
+sentence1([(VM:-AM,NM)]) --> adjective(N, X=>AM), noun(N, X=>NM), verb_phrase(N, X=>VM).
+sentence1([(M2:-M1)]) --> noun(p,X=>M1),verb_phrase(p,X=>M2).
+
 
 verb_phrase(s,M) --> [is],property(s,M).
 verb_phrase(p,M) --> [are],property(p,M).
 verb_phrase(N,M) --> iverb(N,M).
+verb_phrase(N,M) --> modal_phrase(N, M).
+verb_phrase(N,M) --> negated_modal_phrase(N, M).
+
+modal_phrase(_N, X=>has_ability(X, P)) --> [can, do], noun(s, Y=>Lit), {Lit=..[P,Y]}.
+modal_phrase(_N, X=>has_ability(X, P)) --> [can], iverb(p, Y=>Lit), {Lit=..[P,Y]}.
+
+negated_modal_phrase(_N, X=>not(has_ability(X, P))) --> [cannot, do], noun(s, Y=>Lit), {Lit=..[P,Y]}.
+negated_modal_phrase(_N, X=>not(has_ability(X, P))) --> [cannot], iverb(p, Y=>Lit), {Lit=..[P,Y]}.
 
 verb_phrases(s,M1,M2) --> [is],two_property(s,M1,M2).
 
@@ -90,13 +115,6 @@ determiner(p,X=>B,X=>H,[(H:-B)]) --> [all].
 %determiner(p,X=>B,X=>H,[(H:-B)]) --> [].
 %determiner(p, sk=>H1, sk=>H2, [(H1:-true),(H2 :- true)]) -->[some].
 
-
-proper_noun(s,colin) --> [colin].
-proper_noun(s,dave) --> [dave].
-proper_noun(s,bill) --> [bill].
-proper_noun(s,arthur) --> [arthur].
-
-
 %%% questions %%%
 
 question(Q) --> qword,question1(Q).
@@ -108,6 +126,8 @@ qword --> [].
 question1(Q) --> [who],verb_phrase(s,_X=>Q).
 question1(Q) --> [is], proper_noun(N,X),property(N,X=>Q).
 question1(Q) --> [does],proper_noun(_,X),verb_phrase(_,X=>Q).
+question1(has_ability(X, P)) --> [can],proper_noun(_,X),[do], noun(s, Y=>Lit), {Lit=..[P,Y]}.
+question1(has_ability(X, P)) --> [can],proper_noun(_,X), iverb(p, Y=>Lit), {Lit=..[P,Y]}.
 %question1((Q1,Q2)) --> [are,some],noun(p,sk=>Q1),
 %					  property(p,sk=>Q2).
 
@@ -137,7 +157,7 @@ command(g(rr(A),A)) --> thanks.
 %	command(g(true,<response>)) --> <sentence>.
 % maps specific input sentences to specific responses.
 
-command(g(true,"I can do a little bit of logical reasoning. You can talk with me about humans and birds.")) --> [what,can,you,do,for,me,minerva].
+command(g(true,"I can do a little bit of logical reasoning. You can talk with me about Harry Potter and Muggles.")) --> [what,can,you,do,for,me,minerva].
 %command(g(true,"Your middle name is Adriaan")) --> [what,is,my,middle,name].
 %command(g(true,"Today you can find out about postgraduate study at the University of Bristol. This presentation is about the Centre for Doctoral Training in Interactive Artificial Intelligence")) --> today.
 %command(g(true,"The presenter is the Centre Director, Professor Peter Flach")) --> todaysspeaker.
