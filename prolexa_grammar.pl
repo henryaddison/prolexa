@@ -67,6 +67,7 @@ sword --> [that].
 sentence1(C) --> determiner(N,M1,M2,C),noun(N,M1),verb_phrase(N,M2).
 sentence1([(L:-true)]) --> proper_noun(N,X),verb_phrase(N,X=>L).
 sentence1(C) --> conditional(C).
+sentence1(C) --> conditional2(C).
 
 sentence2([(L1:-true),(L2:-true)]) --> proper_noun(N,X),verb_phrases(N,X=>L1,X=>L2).
 
