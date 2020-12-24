@@ -14,6 +14,9 @@ noun(s,M)			--> [Noun],   {pred2gr(_P,1,n/Noun,M)}.
 noun(p,M)			--> [Noun_p], {pred2gr(_P,1,n/Noun,M),noun_s2p(Noun,Noun_p)}.
 iverb(s,M)			--> [Verb_s], {pred2gr(_P,1,v/Verb,M),verb_p2s(Verb,Verb_s)}.
 iverb(p,M)			--> [Verb],   {pred2gr(_P,1,v/Verb,M)}.
+prespart(_,M)			--> [PresPart],   {pred2gr(_P,1,pp/PresPart,M)}.
+tverb(s, M) 		--> [Verb_s], {bpred2gr(_P,1,v/Verb,M),verb_p2s(Verb,Verb_s)}.
+tverb(p, M) 		--> [Verb], {bpred2gr(_P,1,v/Verb,M)}.
 
 % unary predicates for adjectives, nouns and verbs
 pred(bird, 1,[n/bird]).
@@ -24,11 +27,29 @@ pred(abnormal,     1,[a/abnormal]).
 pred(muggle,   1,[n/muggle]).
 pred(vanish,     1,[v/vanish]).
 pred(magic,  1,[a/magic,n/magic]).
+pred(circuit,   1,[n/circuit]).
+pred(bell,   1,[n/bell]).
+pred(switch,   1,[n/switch]).
+pred(radio,   1,[n/radio]).
+pred(lightbulb,   1,[n/lightbulb]).
+pred(play,   1,[pp/playing]).
+pred(glow,   1,[pp/glowing]).
+pred(ring,   1,[pp/ringing]).
+pred(complete,   1,[a/complete]).
+pred(on,   1,[a/on]).
+
+% binary predicates for transitive verbs
+bpred(have, 1, [v/have]).
 
 pred2gr(P,1,C/W,X=>Lit):-
 	pred(P,1,L),
 	member(C/W,L),
 	Lit=..[P,X].
+
+bpred2gr(P,1,C/W,Y=>X=>Lit):-
+	bpred(P,1,L),
+	member(C/W,L),
+	Lit=..[P,X,Y].
 
 noun_s2p(Noun_s,Noun_p):-
 	( Noun_s=woman -> Noun_p=women
@@ -36,11 +57,13 @@ noun_s2p(Noun_s,Noun_p):-
 	; Noun_s=bird -> Noun_p=birds
 	; Noun_s=ostrich -> Noun_p=ostriches
 	; Noun_s=person -> Noun_p=people
+	; Noun_s=switch -> Noun_p=switches
 	; atom_concat(Noun_s,s,Noun_p)
 	).
 
 verb_p2s(Verb_p,Verb_s):-
 	( Verb_p=vanish -> Verb_s=vanishes
+	; Verb_p=have -> Verb_s=has
 	; 	atom_concat(Verb_p,s,Verb_s)
 	).
 
@@ -85,12 +108,21 @@ verb_phrase(p,M) --> [are],property(p,M).
 verb_phrase(N,M) --> iverb(N,M).
 verb_phrase(N,M) --> modal_phrase(N, M).
 verb_phrase(N,M) --> negated_modal_phrase(N, M).
+verb_phrase(s, M) --> [is], prespart(s, M).
+verb_phrase(s, M) --> [are], prespart(p, M).
+% transitive verb phrases
+verb_phrase(N,X=>M) --> tverb(N, Y=>X=>M), article(ON), noun(ON, Y=>Lit), {Lit=..[P, Y], M=..[_, X, P]}.
 
 modal_phrase(_N, X=>has_ability(X, P)) --> [can, do], noun(s, Y=>Lit), {Lit=..[P,Y]}.
 modal_phrase(_N, X=>has_ability(X, P)) --> [can], iverb(p, Y=>Lit), {Lit=..[P,Y]}.
 
 negated_modal_phrase(_N, X=>not(has_ability(X, P))) --> [cannot, do], noun(s, Y=>Lit), {Lit=..[P,Y]}.
 negated_modal_phrase(_N, X=>not(has_ability(X, P))) --> [cannot], iverb(p, Y=>Lit), {Lit=..[P,Y]}.
+
+article(s) --> [a].
+article(p) --> [].
+article(s) --> [the].
+article(p) --> [the].
 
 verb_phrases(s,M1,M2) --> [is],two_property(s,M1,M2).
 
