@@ -99,7 +99,10 @@ sentence2([(L1:-true),(L2:-true)]) --> proper_noun(N,X),verb_phrases(N,X=>L1,X=>
 sentence2(C) --> sentence1(M1), [and], sentence1(M2), {append(M1, M2, C)}.
 
 conditional([(H:-B)]) --> if_somebody, verb_phrase(s, X=>B), [then, they], verb_phrase(p, X=>H).
+conditional([(H:-B)]) --> [if], sentence1([B:-true]), [then], sentence1([H:-true]).
+
 conditional2([(H:-B1,B2)]) --> if_somebody, verb_phrases(s, X=>B1, X=>B2), [then, they], verb_phrase(p, X=>H).
+conditional2([(H:-B1,B2)]) --> [if], sentence2([B1:-true, B2:-true]), [then], sentence1([H:-true]).
 
 if_somebody --> [if, a, person].
 if_somebody --> [if, someone].
