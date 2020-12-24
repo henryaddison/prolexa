@@ -96,6 +96,7 @@ sentence1([(VM:-AM,NM)]) --> adjective(N, X=>AM), noun(N, X=>NM), verb_phrase(N,
 sentence1([(M2:-M1)]) --> noun(p,X=>M1),verb_phrase(p,X=>M2).
 
 sentence2([(L1:-true),(L2:-true)]) --> proper_noun(N,X),verb_phrases(N,X=>L1,X=>L2).
+sentence2(C) --> sentence1(M1), [and], sentence1(M2), {append(M1, M2, C)}.
 
 conditional([(H:-B)]) --> if_somebody, verb_phrase(s, X=>B), [then, they], verb_phrase(p, X=>H).
 conditional2([(H:-B1,B2)]) --> if_somebody, verb_phrases(s, X=>B1, X=>B2), [then, they], verb_phrase(p, X=>H).
