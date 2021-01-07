@@ -91,6 +91,7 @@ sentence1(C) --> determiner(N,M1,M2,C),noun(N,M1),verb_phrase(N,M2).
 sentence1([(L:-true)]) --> proper_noun(N,X),verb_phrase(N,X=>L).
 sentence1([not(L):-true]) -->  proper_noun(N,X),negated_verb_phrase(N,X=>L).
 sentence1([(L:-true)]) --> article(N), noun(N,X=>Lit), verb_phrase(N,P=>L), {Lit=..[P, X]}.
+sentence1([(not(L):-true)]) --> article(N), noun(N,X=>Lit), negated_verb_phrase(N,P=>L), {Lit=..[P, X]}.
 sentence1(C) --> conditional(C).
 sentence1(C) --> conditional2(C).
 sentence1([(VM:-AM,NM)]) --> adjective(N, X=>AM), noun(N, X=>NM), verb_phrase(N, X=>VM).
