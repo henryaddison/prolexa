@@ -83,6 +83,12 @@ prove_rb(A,Rulebase,P0,P):-
 prove_rb(Q,RB):-
 	prove_rb(Q,RB,[],_P).
 
+% check contradiction against rules
+%contradiction(not A,E):-!,
+%	prove_e(A,E,_E1).
+% contradiction(A,E):-
+% 	prove_e(not A,E,_E1).
+
 
 %%% Utilities from nl_shell.pl %%%
 
@@ -114,7 +120,11 @@ rule2message(Rule,Message):-
 
 % collect everything that can be proved about a particular Proper Noun
 all_answers(PN,Answer):-
-	findall(Q,(pred(P,1,_),Q=..[P,PN]),Queries), % collect known predicates from grammar
+	%findall(Q,(pred(P,1,_),Q=..[P,PN]);(pred(P,1,_),Q=..[not, P,PN]),Queries), % collect known predicates from grammar
+	findall(Q,(pred(P,1,_),Q=..[P,PN]),Queries1), % collect known predicates from grammar
+  	findall(not(Q),(pred(P,1,_),Q=..[P,PN]),Queries2),
+  	append(Queries1, Queries2, Queries),
+  	writeln(Queries),
 	maplist(prove_question,Queries,Msg),
 	delete(Msg,"",Messages),
 	( Messages=[] -> atomic_list_concat(['I know nothing about',PN],' ',Answer)

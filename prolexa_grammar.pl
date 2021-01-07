@@ -89,6 +89,7 @@ sword --> [that].
 % most of this follows Simply Logical, Chapter 7
 sentence1(C) --> determiner(N,M1,M2,C),noun(N,M1),verb_phrase(N,M2).
 sentence1([(L:-true)]) --> proper_noun(N,X),verb_phrase(N,X=>L).
+sentence1([not(L):-true]) -->  proper_noun(N,X),negated_verb_phrase(N,X=>L).
 sentence1([(L:-true)]) --> article(N), noun(N,X=>Lit), verb_phrase(N,P=>L), {Lit=..[P, X]}.
 sentence1(C) --> conditional(C).
 sentence1(C) --> conditional2(C).
@@ -100,8 +101,10 @@ sentence2(C) --> sentence1(M1), [and], sentence1(M2), {append(M1, M2, C)}.
 
 conditional([(H:-B)]) --> if_somebody, verb_phrase(s, X=>B), [then, they], verb_phrase(p, X=>H).
 conditional([(H:-B)]) --> [if], sentence1([B:-true]), [then], sentence1([H:-true]).
+conditional([(H:-not(B))]) --> if_somebody, negated_verb_phrase(s, X=>B), [then, they], verb_phrase(p, X=>H).
 
 conditional2([(H:-B1,B2)]) --> if_somebody, verb_phrases(s, X=>B1, X=>B2), [then, they], verb_phrase(p, X=>H).
+%conditional2([(H:-B1,B2)]) --> if_somebody, verb_phrases(s, X=>B1, X=>B2), [then, they], verb_phrase(p, X=>H).
 conditional2([(H:-B1,B2)]) --> [if], sentence2([B1:-true, B2:-true]), [then], sentence1([H:-true]).
 
 if_somebody --> [if, a, person].
@@ -111,12 +114,18 @@ if_somebody --> [if, somebody].
 verb_phrase(s,M) --> [is],property(s,M).
 verb_phrase(p,M) --> [are],property(p,M).
 verb_phrase(N,M) --> iverb(N,M).
-verb_phrase(N,M) --> modal_phrase(N, M).
+verb_phrase(N,M) --> modal_phrase(N,M).
+
+verb_phrases(s,M1,M2) --> [is],two_property(s,M1,M2).
+
 verb_phrase(N,M) --> negated_modal_phrase(N, M).
 verb_phrase(s, M) --> [is], prespart(s, M).
 verb_phrase(s, M) --> [are], prespart(p, M).
 % transitive verb phrases
 verb_phrase(N,X=>M) --> tverb(N, Y=>X=>M), article(ON), noun(ON, Y=>Lit), {Lit=..[P, Y], M=..[_, X, P]}.
+
+negated_verb_phrase(s,M) --> [is,not],property(s,M).
+negated_verb_phrase(p,M) --> [are,not],property(p,M).
 
 modal_phrase(_N, X=>has_ability(X, P)) --> [can, do], noun(s, Y=>Lit), {Lit=..[P,Y]}.
 modal_phrase(_N, X=>has_ability(X, P)) --> [can], iverb(p, Y=>Lit), {Lit=..[P,Y]}.
@@ -137,8 +146,12 @@ property(s,M) --> [an],noun(s,M).
 property(p,M) --> noun(p,M).
 property(p,M) --> [a],noun(s,M).
 property(p,M) --> [an],noun(s,M).
+%property(p,M) --> negated_property(N, M).
 
 two_property(s,M1,M2) --> property(s,M1),[and],property(s,M2).
+
+%negated_property(N, Y=>not(P)) --> [not], property(N, Y=>Lit), {Lit=..[P,Y]}.
+
 
 determiner(s,X=>B,X=>H,[(H:-B)]) --> [every].
 determiner(p,X=>B,X=>H,[(H:-B)]) --> [all].
