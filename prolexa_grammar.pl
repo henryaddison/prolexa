@@ -126,6 +126,8 @@ verb_phrase(N,X=>M) --> tverb(N, Y=>X=>M), article(ON), noun(ON, Y=>Lit), {Lit=.
 
 negated_verb_phrase(s,M) --> [is,not],property(s,M).
 negated_verb_phrase(p,M) --> [are,not],property(p,M).
+negated_verb_phrase(s,X=>M) --> [does,not],tverb(p, Y=>X=>M), article(ON), noun(ON, Y=>Lit), {Lit=..[P, Y], M=..[_, X, P]}.
+negated_verb_phrase(p,X=>M) --> [do,not],tverb(p, Y=>X=>M), article(ON), noun(ON, Y=>Lit), {Lit=..[P, Y], M=..[_, X, P]}.
 
 modal_phrase(_N, X=>has_ability(X, P)) --> [can, do], noun(s, Y=>Lit), {Lit=..[P,Y]}.
 modal_phrase(_N, X=>has_ability(X, P)) --> [can], iverb(p, Y=>Lit), {Lit=..[P,Y]}.
