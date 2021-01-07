@@ -120,8 +120,6 @@ verb_phrase(N,M) --> modal_phrase(N,M).
 verb_phrases(s,M1,M2) --> [is],two_property(s,M1,M2).
 
 verb_phrase(N,M) --> negated_modal_phrase(N, M).
-verb_phrase(s, M) --> [is], prespart(s, M).
-verb_phrase(s, M) --> [are], prespart(p, M).
 % transitive verb phrases
 verb_phrase(N,X=>M) --> tverb(N, Y=>X=>M), article(ON), noun(ON, Y=>Lit), {Lit=..[P, Y], M=..[_, X, P]}.
 
@@ -149,6 +147,7 @@ property(s,M) --> [an],noun(s,M).
 property(p,M) --> noun(p,M).
 property(p,M) --> [a],noun(s,M).
 property(p,M) --> [an],noun(s,M).
+property(_,M) --> prespart(p, M).
 %property(p,M) --> negated_property(N, M).
 
 two_property(s,M1,M2) --> property(s,M1),[and],property(s,M2).
