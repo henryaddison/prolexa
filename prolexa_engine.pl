@@ -79,14 +79,13 @@ prove_rb(A,Rulebase,P0,P):-
     find_clause((A:-B),Rule,Rulebase),
 	prove_rb(B,Rulebase,[p(A,Rule)|P0],P).
 prove_rb(not(A),Rulebase,P0,P):-
-	not(prove_rb(A,Rulebase)),
-	prove_rb(true,Rulebase,P0,P).
+	not(prove_rb(A,Rulebase)).
 
 
 % prove_rb(A,E0,[default((A:-B))|E]):-
 % 	default((A:-B)),
 % 	prove_rb(B,E0,E),
-% 	not contradiction(A,E). 
+% 	not contradiction(A,E).
 
 % top-level version that ignores proof
 prove_rb(Q,RB):-
