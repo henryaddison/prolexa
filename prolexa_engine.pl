@@ -78,16 +78,25 @@ prove_rb((A,B),Rulebase,P0,P):-!,
 prove_rb(A,Rulebase,P0,P):-
     find_clause((A:-B),Rule,Rulebase),
 	prove_rb(B,Rulebase,[p(A,Rule)|P0],P).
+prove_rb(not(A),Rulebase,P0,P):-
+	not(prove_rb(A,Rulebase)),
+	prove_rb(true,Rulebase,P0,P).
+
+
+% prove_rb(A,E0,[default((A:-B))|E]):-
+% 	default((A:-B)),
+% 	prove_rb(B,E0,E),
+% 	not contradiction(A,E). 
 
 % top-level version that ignores proof
 prove_rb(Q,RB):-
 	prove_rb(Q,RB,[],_P).
 
-% check contradiction against rules
-%contradiction(not A,E):-!,
-%	prove_e(A,E,_E1).
+% % check contradiction against rules
+% contradiction(not A,E):-!,
+% 	prove_rb(A,E,_E1).
 % contradiction(A,E):-
-% 	prove_e(not A,E,_E1).
+%  	prove_rb(not A,E,_E1).
 
 
 %%% Utilities from nl_shell.pl %%%
@@ -131,4 +140,4 @@ all_answers(PN,Answer):-
 	; otherwise -> atomic_list_concat(Messages,". ",Answer)
 	).
 
-
+default((not(abnormal(X)):-bird(X))).
