@@ -82,6 +82,9 @@ prove_rb((A,B),Rulebase,P0,P):-!,
 prove_rb(A,Rulebase,P0,P):-
     find_clause((A:-B),Rule,Rulebase),
 	prove_rb(B,Rulebase,[p(A,Rule)|P0],P).
+prove_rb(A:-B,Rulebase,P0,P):-
+		add_body_to_rulebase(B,Rulebase,Rs),
+		prove_rb(A,Rs,[p((A:-B),[(A:-B)])|P0],P).
 prove_rb(not(A),Rulebase,P0,P):-
 	not(prove_rb(A,Rulebase)),
 	prove_rb(true,Rulebase,[p(assumednot(A),[not(A):-true])|P0],P).
