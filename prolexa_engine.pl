@@ -45,6 +45,9 @@ explain_question(Query,SessionId,Answer):-
 	).
 
 % convert proof step to message
+pstep2message(p(assumednot(_),Rule),Message):-
+	rule2message(Rule,FM),
+	atomic_list_concat(['No one told me',FM]," ",Message).
 pstep2message(p(_,Rule),Message):-
 	rule2message(Rule,Message).
 pstep2message(n(Fact),Message):-
@@ -79,7 +82,8 @@ prove_rb(A,Rulebase,P0,P):-
     find_clause((A:-B),Rule,Rulebase),
 	prove_rb(B,Rulebase,[p(A,Rule)|P0],P).
 prove_rb(not(A),Rulebase,P0,P):-
-	not(prove_rb(A,Rulebase)).
+	not(prove_rb(A,Rulebase)),
+	prove_rb(true,Rulebase,[p(assumednot(A),[not(A):-true])|P0],P).
 
 
 % prove_rb(A,E0,[default((A:-B))|E]):-
