@@ -70,6 +70,23 @@ write_debug(Atom):-
 	write(user_error,'*** '),writeln(user_error,Atom),flush_output(user_error).
 
 
+load_file(Filename):-
+	open(Filename, read, Str),
+    read_file(Str,Lines),
+    close(Str),
+	maplist(handle_utterance1,Lines,_Messages).
+
+handle_utterance1(Utterance,Answer):-
+	handle_utterance(1,Utterance,Answer).
+
+read_file(Stream,[]) :-
+    at_end_of_stream(Stream).
+
+read_file(Stream,[X|L]) :-
+    \+ at_end_of_stream(Stream),
+    read_line_to_string(Stream,X),
+    read_file(Stream,L).
+
 %%%%% the stuff below is only relevant if you want to create a voice-driven Alexa skill %%%%%
 
 
