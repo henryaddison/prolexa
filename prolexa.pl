@@ -36,6 +36,17 @@ prolexa_cli:-
 		prolexa_cli
 	).
 
+handle_sentence([], Utterance, Answer).
+handle_sentence([Rule|Rules], Utterance, Answer):-
+	write_debug(rule(Rule)),
+	( known_rule([Rule],SessionId) -> % A1. It follows from known rules
+		atomic_list_concat(['I already knew that',Utterance],' ',Answer)
+	; otherwise -> % A2. It doesn't follow, so add to stored rules
+		assertz(prolexa:stored_rule(SessionId,[Rule])),
+		atomic_list_concat(['I will remember that',Utterance],' ',Answer)
+	),
+	handle_sentence(Rules, Utterance, Answer).
+
 % Main predicate that uses DCG as defined in prolexa_grammar.pl
 % to distinguish between sentences, questions and commands
 handle_utterance(SessionId,Utterance,Answer):-
@@ -44,15 +55,9 @@ handle_utterance(SessionId,Utterance,Answer):-
 	split_string(Utterance," ","",StringList),	% tokenize by spaces
 	maplist(string_lower,StringList,StringListLow),	% all lowercase
 	maplist(atom_string,UtteranceList,StringListLow),	% strings to atoms
-% A. Utterance is a sentence
-	( phrase(sentence(Rule),UtteranceList),
-	  write_debug(rule(Rule)),
-	  ( known_rule(Rule,SessionId) -> % A1. It follows from known rules
-			atomic_list_concat(['I already knew that',Utterance],' ',Answer)
-	  ; otherwise -> % A2. It doesn't follow, so add to stored rules
-			assertz(prolexa:stored_rule(SessionId,Rule)),
-			atomic_list_concat(['I will remember that',Utterance],' ',Answer)
-	  )
+% A. Utterance is a sentence consisting of one or more rules
+	( phrase(sentence(Rules),UtteranceList),
+		handle_sentence(Rules, Utterance, Answer)
 % B. Utterance is a question that can be answered
 	; phrase(question(Query),UtteranceList),
 	  write_debug(query(Query)),

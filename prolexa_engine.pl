@@ -45,6 +45,9 @@ explain_question(Query,SessionId,Answer):-
 	).
 
 % convert proof step to message
+pstep2message(p(assumednot(_),Rule),Message):-
+	rule2message(Rule,FM),
+	atomic_list_concat(['No one told me',FM]," ",Message).
 pstep2message(p(_,Rule),Message):-
 	rule2message(Rule,Message).
 pstep2message(n(Fact),Message):-
@@ -58,6 +61,7 @@ known_rule([Rule],SessionId):-
 	try((numbervars(Rule,0,_),
 	     Rule=(H:-B),
 	     add_body_to_rulebase(B,Rulebase,RB2),
+			 H \= not(_),
 	     prove_rb(H,RB2)
 	   )).
 
@@ -80,13 +84,13 @@ prove_rb(A,Rulebase,P0,P):-
 	prove_rb(B,Rulebase,[p(A,Rule)|P0],P).
 prove_rb(not(A),Rulebase,P0,P):-
 	not(prove_rb(A,Rulebase)),
-	prove_rb(true,Rulebase,P0,P).
+	prove_rb(true,Rulebase,[p(assumednot(A),[not(A):-true])|P0],P).
 
 
 % prove_rb(A,E0,[default((A:-B))|E]):-
 % 	default((A:-B)),
 % 	prove_rb(B,E0,E),
-% 	not contradiction(A,E). 
+% 	not contradiction(A,E).
 
 % top-level version that ignores proof
 prove_rb(Q,RB):-
