@@ -74,6 +74,10 @@ handle_utterance(SessionId,Utterance,Answer):-
 write_debug(Atom):-
 	write(user_error,'*** '),writeln(user_error,Atom),flush_output(user_error).
 
+load_example(Filename, Answer):-
+	retractall(prolexa:stored_rule(_,_)),
+	load_file(Filename),
+	Answer = "Memory wiped and example loaded.".
 
 load_file(Filename):-
 	open(Filename, read, Str),
