@@ -98,12 +98,12 @@ sentence1(C) --> conditional(C).
 sentence1(C) --> conditional2(C).
 sentence1([(VM:-AM,NM)]) --> adjective(N, X=>AM), noun(N, X=>NM), verb_phrase(N, X=>VM).
 sentence1([(M2:-M1)]) --> noun(p,X=>M1),verb_phrase(p,X=>M2).
+sentence1(C) --> conditional3(C).
 
 sentence2([(L1:-true),(L2:-true)]) --> proper_noun(N,X),verb_phrases(N,X=>L1,X=>L2).
 sentence2(C) --> sentence1(M1), [and], sentence1(M2), {append(M1, M2, C)}.
 
 conditional([(H:-B)]) --> if_somebody, verb_phrase(s, X=>B), [then, they], verb_phrase(p, X=>H).
-conditional([(H:-B)]) --> [if], sentence1([B:-true]), [then], sentence1([H:-true]).
 conditional([(H:-not(B))]) --> if_somebody, negated_verb_phrase(s, X=>B), [then, they], verb_phrase(p, X=>H).
 conditional([(not(H):-B)]) --> if_somebody, verb_phrase(s, X=>B), [then, they], negated_verb_phrase(p, X=>H).
 
@@ -111,6 +111,8 @@ conditional2([(H:-B1,B2)]) --> if_somebody, verb_phrases(s, X=>B1, X=>B2), [then
 conditional2([(H:-B1,not(B2))]) --> if_somebody, verb_phrase(s, X=>B1),[and,not], property(s,X=>B2), [then, they], verb_phrase(p, X=>H).
 conditional2([(H:-B1,not(B2))]) --> if_somebody, negated_verb_phrase(s, X=>B1),[and], verb_phrase(s,X=>B2), [then, they], verb_phrase(p, X=>H).
 conditional2([(H:-B1,B2)]) --> [if], sentence2([B1:-true, B2:-true]), [then], sentence1([H:-true]).
+
+conditional3([(H:-B)]) --> [if], sentence1([B:-true]), [then], sentence1([H:-true]).
 
 if_somebody --> [if, a, person].
 if_somebody --> [if, someone].
