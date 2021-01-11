@@ -61,6 +61,7 @@ known_rule([Rule],SessionId):-
 	try((numbervars(Rule,0,_),
 	     Rule=(H:-B),
 	     add_body_to_rulebase(B,Rulebase,RB2),
+			 H \= not(_),
 	     prove_rb(H,RB2)
 	   )).
 
