@@ -197,6 +197,7 @@ command(g(retractall(prolexa:stored_rule(_,_)),"I am a blank slate")) --> forget
 command(g(all_rules(Answer),Answer)) --> kbdump.
 command(g(all_answers(PN,Answer),Answer)) --> tellmeabout,proper_noun(s,PN).
 command(g(explain_question(Q,_,Answer),Answer)) --> [explain,why],sentence1([(Q:-true)]).
+command(g(explain_question(H:-B,_,Answer),Answer)) --> [explain,why],sentence1([(H:-B)]).
 command(g(random_fact(Fact),Fact)) --> getanewfact.
 %command(g(pf(A),A)) --> peterflach.
 %command(g(iai(A),A)) --> what.
