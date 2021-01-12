@@ -35,7 +35,6 @@ prolexa_cli:-
 		writeln(Output),
 		prolexa_cli
 	).
-
 handle_sentence([], Utterance, Answer).
 handle_sentence([Rule|Rules], Utterance, Answer):-
 	write_debug(rule(Rule)),

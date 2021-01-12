@@ -1,3 +1,24 @@
+# Henry and Vanessa's submission #
+
+### Examples we addressed
+
+1. Harry Potter (imaginary worlds)
+2. Ostriches and wounded birds don't fly (Birds Rulebase) 
+3. Birds typically don't fly, but ostriches can (Birds Rulebase)
+4. Electricity Rulebase 1
+
+
+### To load an example
+
+
+
+---
+---
+
+
+### Read me from original code
+
+
 This repository contains Prolog code for a simple question-answering assistant. The top-level module is `prolexa.pl`, which can either be run in the command line or with speech input and output through the 
 [alexa developer console](https://developer.amazon.com/alexa/console/ask).
 

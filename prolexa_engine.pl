@@ -47,7 +47,7 @@ explain_question(Query,SessionId,Answer):-
 % convert proof step to message
 pstep2message(p(assumednot(_),Rule),Message):-
 	rule2message(Rule,FM),
-	atomic_list_concat(['No one told me',FM]," ",Message).
+	atomic_list_concat(['No one told me',FM,',so I assume that is false']," ",Message).
 pstep2message(p(_,Rule),Message):-
 	rule2message(Rule,Message).
 pstep2message(n(Fact),Message):-
@@ -82,25 +82,37 @@ prove_rb((A,B),Rulebase,P0,P):-!,
 prove_rb(A,Rulebase,P0,P):-
     find_clause((A:-B),Rule,Rulebase),
 	prove_rb(B,Rulebase,[p(A,Rule)|P0],P).
+
+% Modus tollens
+% prove_rb((not(A)),Rulebase,P0,P):-
+% 	find_clause((C:-A),Rule1,Rulebase),
+% 	find_clause((not(C):-B),Rule2,Rulebase),
+% 	prove_rb(B,Rulebase,[p(C,Rule2),p(assumednot(A),[A:-not(C)])|P0],P).
+
+
 prove_rb(not(A),Rulebase,P0,P):-
 	not(prove_rb(A,Rulebase)),
-	prove_rb(true,Rulebase,[p(assumednot(A),[not(A):-true])|P0],P).
+	prove_rb(true,Rulebase,[p(assumednot(A),[A:-true])|P0],P).
 
 
-% prove_rb(A,E0,[default((A:-B))|E]):-
-% 	default((A:-B)),
-% 	prove_rb(B,E0,E),
-% 	not contradiction(A,E).
+
+prove_rb(A,Rulebase,P0,P):-!,
+	default((A:-B)),
+	find_clause((B:-C),Rule,Rulebase),
+	%prove_rb(C,Rulebase,[p(A,Rule)|P0],P),
+	prove_rb(C,Rulebase,[p(B,Rule)|P0],P),
+	not contradiction(A,Rulebase).
+
 
 % top-level version that ignores proof
 prove_rb(Q,RB):-
 	prove_rb(Q,RB,[],_P).
 
-% % check contradiction against rules
-% contradiction(not A,E):-!,
-% 	prove_rb(A,E,_E1).
-% contradiction(A,E):-
-%  	prove_rb(not A,E,_E1).
+ % % check contradiction against rules
+contradiction(not A,Rulebase):-!,
+	prove_rb(A,Rulebase).
+contradiction(A,Rulebase):-
+ 	prove_rb(not A,Rulebase).
 
 
 %%% Utilities from nl_shell.pl %%%
