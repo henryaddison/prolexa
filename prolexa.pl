@@ -29,11 +29,22 @@ stored_rule(1,[(human(peter):-true)]).
 prolexa_cli:-
 	read(Input),
 	( Input=stop -> true
+	; Input=end_of_file -> true
 	; otherwise ->
 		handle_utterance(1,Input,Output),
 		writeln(Output),
 		prolexa_cli
 	).
+handle_sentence([], Utterance, Answer).
+handle_sentence([Rule|Rules], Utterance, Answer):-
+	write_debug(rule(Rule)),
+	( known_rule([Rule],SessionId) -> % A1. It follows from known rules
+		atomic_list_concat(['I already knew that',Utterance],' ',Answer)
+	; otherwise -> % A2. It doesn't follow, so add to stored rules
+		assertz(prolexa:stored_rule(SessionId,[Rule])),
+		atomic_list_concat(['I will remember that',Utterance],' ',Answer)
+	),
+	handle_sentence(Rules, Utterance, Answer).
 
 % Main predicate that uses DCG as defined in prolexa_grammar.pl
 % to distinguish between sentences, questions and commands
@@ -43,15 +54,9 @@ handle_utterance(SessionId,Utterance,Answer):-
 	split_string(Utterance," ","",StringList),	% tokenize by spaces
 	maplist(string_lower,StringList,StringListLow),	% all lowercase
 	maplist(atom_string,UtteranceList,StringListLow),	% strings to atoms
-% A. Utterance is a sentence
-	( phrase(sentence(Rule),UtteranceList),
-	  write_debug(rule(Rule)),
-	  ( known_rule(Rule,SessionId) -> % A1. It follows from known rules
-			atomic_list_concat(['I already knew that',Utterance],' ',Answer)
-	  ; otherwise -> % A2. It doesn't follow, so add to stored rules
-			assertz(prolexa:stored_rule(SessionId,Rule)),
-			atomic_list_concat(['I will remember that',Utterance],' ',Answer)
-	  )
+% A. Utterance is a sentence consisting of one or more rules
+	( phrase(sentence(Rules),UtteranceList),
+		handle_sentence(Rules, Utterance, Answer)
 % B. Utterance is a question that can be answered
 	; phrase(question(Query),UtteranceList),
 	  write_debug(query(Query)),
@@ -68,6 +73,27 @@ handle_utterance(SessionId,Utterance,Answer):-
 write_debug(Atom):-
 	write(user_error,'*** '),writeln(user_error,Atom),flush_output(user_error).
 
+load_example(Filename, Answer):-
+	retractall(prolexa:stored_rule(_,_)),
+	load_file(Filename),
+	Answer = "Memory wiped and example loaded.".
+
+load_file(Filename):-
+	open(Filename, read, Str),
+    read_file(Str,Lines),
+    close(Str),
+	maplist(handle_utterance1,Lines,_Messages).
+
+handle_utterance1(Utterance,Answer):-
+	handle_utterance(1,Utterance,Answer).
+
+read_file(Stream,[]) :-
+    at_end_of_stream(Stream).
+
+read_file(Stream,[X|L]) :-
+    \+ at_end_of_stream(Stream),
+    read_line_to_string(Stream,X),
+    read_file(Stream,L).
 
 %%%%% the stuff below is only relevant if you want to create a voice-driven Alexa skill %%%%%
 
