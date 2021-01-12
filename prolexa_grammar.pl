@@ -214,6 +214,8 @@ command(g(true,"I can do a little bit of logical reasoning. You can talk with me
 command(g(load_example(N, Answer), Answer)) --> [load, example], example_file(N).
 example_file('harry_potter.txt') --> [harry_potter].
 example_file('electricity.txt') --> [electricity].
+example_file('bird_1.txt') --> [bird_1].
+example_file('bird_2.txt') --> [bird_2].
 
 thanks --> [thank,you].
 thanks --> [thanks].
