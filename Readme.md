@@ -8,7 +8,86 @@
 4. [Electricity Rulebase 1](https://rule-reasoning.apps.allenai.org/?p=The%20circuit%20has%20a%20switch.%20%0AThe%20circuit%20has%20a%20bell.%20%0AThe%20switch%20is%20on.%20%0AIf%20the%20circuit%20has%20the%20switch%20and%20the%20switch%20is%20on%20then%20the%20circuit%20is%20complete.%20%0AIf%20the%20circuit%20does%20not%20have%20the%20switch%20then%20the%20circuit%20is%20complete.%20%0AIf%20the%20circuit%20is%20complete%20and%20the%20circuit%20has%20the%20light%20bulb%20then%20the%20light%20bulb%20is%20glowing.%20%0AIf%20the%20circuit%20is%20complete%20and%20the%20circuit%20has%20the%20bell%20then%20the%20bell%20is%20ringing.%20%0AIf%20the%20circuit%20is%20complete%20and%20the%20circuit%20has%20the%20radio%20then%20the%20radio%20is%20playing.&q=The%20bell%20is%20ringing.%20%0AThe%20light%20bulb%20is%20glowing.%20%0AThe%20radio%20is%20playing)
 
 
-### To load an example
+### Loading an example
+
+Ask prolexa to "load example xyz" and the memory will be wiped and the facts and rules as given by the example are loaded.
+
+```
+prolexa> “load example harry_potter".
+prolexa> “load example bird_1".
+prolexa> “load example bird_2".
+prolexa> “load example electricity".
+
+```
+
+The riddles "Is it true?" questions can be tested by either asking a direct question:
+```
+prolexa> "Is the bell ringing".
+```
+or by asking prolexa to explain:
+```
+prolexa> "explain why the bell ringing".
+```
+
+### Interesting things to try
+
+
+#### 1. Proving something is not
+
+In some of our cases, negation works as failure.
+
+```
+prolexa> “Muggles cannot do magic”.
+prolexa> “If someone can do magic then they can vanish”.
+prolexa> “Mr Dursley is a Muggle”.
+prolexa> “Can Mr Dursley vanish”.
+```
+
+Other times we had to implement a rule to check if the information had been explicitly declared or inferred. For example in this case, it needs to be implied that when something has not been declared as abnormal, that it is then normal. This example needs to handle both negations and conjunctions. 
+
+```
+prolexa> "If someone is an ostrich then they are abnormal".
+prolexa> “If someone is a bird and not abnormal then they can fly”.
+prolexa> “Explain why Arthur can fly”.
+```
+
+#### 2.Rules and facts with conjunction
+
+Sentences and properties can be conjoined using “and” meaning that an utterance may include more than one fact and the head or body of a rule may have multiple parts.
+
+The following will determine that Colin is wounded and a bird from a single utterance
+```
+prolexa> “Colin is a bird and wounded”.
+prolexa> “Is Colin wounded”.
+prolexa> “Is Colin a bird”.
+```
+
+The following shows an example of a conditional sentence making a rule with a conjunctive body:
+```
+prolexa> “If the circuit has the switch and the switch is on then the circuit is complete”.
+prolexa> “The circuit has the switch”.
+prolexa> “The switch is on”.
+prolexa> “Is the circuit complete”.
+```
+
+#### 3.Transitive verbs
+
+Transitive verbs require a subject and an object so need binary rather than unary predicates. For example:
+```
+prolexa> “The circuit has a switch”.
+```
+adds the rule `has(circuit, switch):-true` to the rulebase
+
+#### 4.Nouns as constants rather than properties
+
+Common nouns can be handled in two ways. The circuit example required nouns to be regarded as constants in some cases as opposed to properties of proper nouns such as in the bird example.
+
+```
+prolexa> “bill is an ostrich”.
+prolexa> “the bell is ringing”.
+prolexa> “if someone is an ostrich then they are abnormal”.
+```
+adds the rules `(ostrich(bill):-true),(ringing(bell):-true),(abnormal(X):-ostrich(X))` to the rulebase
 
 
 
