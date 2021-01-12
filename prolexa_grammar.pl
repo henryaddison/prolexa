@@ -141,10 +141,10 @@ modal_phrase(_N, X=>has_ability(X, P)) --> [can], iverb(p, Y=>Lit), {Lit=..[P,Y]
 negated_modal_phrase(_N, X=>not(has_ability(X, P))) --> [cannot, do], noun(s, Y=>Lit), {Lit=..[P,Y]}.
 negated_modal_phrase(_N, X=>not(has_ability(X, P))) --> [cannot], iverb(p, Y=>Lit), {Lit=..[P,Y]}.
 
-article(s) --> [a].
-article(p) --> [].
 article(s) --> [the].
 article(p) --> [the].
+article(s) --> [a].
+article(p) --> [].
 
 property(N,M) --> adjective(N,M).
 property(s,M) --> [a],noun(s,M).
