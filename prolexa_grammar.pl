@@ -112,7 +112,7 @@ conditional([(not(H):-B)]) --> if_somebody, verb_phrase(s, X=>B), [then, they], 
 conditional2([(H:-B1,B2)]) --> if_somebody, verb_phrases(s, X=>B1, X=>B2), [then, they], verb_phrase(p, X=>H).
 conditional2([(H:-B1,not(B2))]) --> if_somebody, verb_phrase(s, X=>B1),[and,not], property(s,X=>B2), [then, they], verb_phrase(p, X=>H).
 conditional2([(H:-not(B1),B2)]) --> if_somebody, negated_verb_phrase(s, X=>B1),[and], verb_phrase(s,X=>B2), [then, they], verb_phrase(p, X=>H).
-conditional2([(H:-B1,B2)]) --> [if], sentence1([B1:-true, B2:-true]), [then], sentence1([H:-true]).
+conditional2([(H:-B1,B2)]) --> [if], sentence2([B1:-true, B2:-true]), [then], sentence1([H:-true]).
 
 
 conditional3([(H:-B)]) --> [if], sentence1([B:-true]), [then], sentence1([H:-true]).
