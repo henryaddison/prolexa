@@ -102,7 +102,8 @@ sentence1([(M2:-M1)]) --> noun(p,X=>M1),verb_phrase(p,X=>M2).
 sentence1(C) --> conditional3(C).
 
 sentence2([(L1:-true),(L2:-true)]) --> proper_noun(N,X),verb_phrases(N,X=>L1,X=>L2).
-sentence2(C) --> sentence1(M1), [and], sentence1(M2), {append(M1, M2, C)}.
+sentence2([(L1:-true),(L2:-true)]) --> article(s), noun(s,X1=>Lit1), verb_phrase(s,P1=>L1),[and],article(s), noun(s,X2=>Lit2), verb_phrase(s,P2=>L2) , {Lit1=..[P1, X1]},{Lit2=..[P2, X2]}.
+%sentence2(C) --> sentence1(M1), [and], sentence1(M2), {append(M1, M2, C)}.
 
 conditional([(H:-B)]) --> if_somebody, verb_phrase(s, X=>B), [then, they], verb_phrase(p, X=>H).
 conditional([(H:-not(B))]) --> if_somebody, negated_verb_phrase(s, X=>B), [then, they], verb_phrase(p, X=>H).
