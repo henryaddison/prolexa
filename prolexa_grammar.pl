@@ -212,6 +212,12 @@ command(g(true,"I can do a little bit of logical reasoning. You can talk with me
 %command(g(true,"Today you can find out about postgraduate study at the University of Bristol. This presentation is about the Centre for Doctoral Training in Interactive Artificial Intelligence")) --> today.
 %command(g(true,"The presenter is the Centre Director, Professor Peter Flach")) --> todaysspeaker.
 
+command(g(load_example(N, Answer), Answer)) --> [load, example], example_file(N).
+example_file('harry_potter.txt') --> [harry_potter].
+example_file('electricity.txt') --> [electricity].
+example_file('bird_1.txt') --> [bird_1].
+example_file('bird_2.txt') --> [bird_2].
+
 thanks --> [thank,you].
 thanks --> [thanks].
 thanks --> [great,thanks].
