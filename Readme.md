@@ -20,13 +20,13 @@ prolexa> “load example electricity".
 
 ```
 
-The riddles "Is it true?" questions can be tested by either asking a direct question:
+The riddle's "Is it true?" questions can be tested by either asking a direct question:
 ```
-prolexa> "Is the bell ringing".
+prolexa> "Is the bell is ringing".
 ```
 or by asking prolexa to explain:
 ```
-prolexa> "explain why the bell ringing".
+prolexa> "Explain why Bill cannot fly".
 ```
 
 ### Interesting things to try
@@ -51,7 +51,7 @@ prolexa> “If someone is a bird and not abnormal then they can fly”.
 prolexa> “Explain why Arthur can fly”.
 ```
 
-#### 2.Rules and facts with conjunction
+#### 2. Rules and facts with conjunction
 
 Sentences and properties can be conjoined using “and” meaning that an utterance may include more than one fact and the head or body of a rule may have multiple parts.
 
@@ -70,7 +70,7 @@ prolexa> “The switch is on”.
 prolexa> “Is the circuit complete”.
 ```
 
-#### 3.Transitive verbs
+#### 3. Transitive verbs
 
 Transitive verbs require a subject and an object so need binary rather than unary predicates. For example:
 ```
@@ -78,7 +78,7 @@ prolexa> “The circuit has a switch”.
 ```
 adds the rule `has(circuit, switch):-true` to the rulebase
 
-#### 4.Nouns as constants rather than properties
+#### 4. Nouns as constants rather than properties
 
 Common nouns can be handled in two ways. The circuit example required nouns to be regarded as constants in some cases as opposed to properties of proper nouns such as in the bird example.
 
