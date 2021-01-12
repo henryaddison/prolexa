@@ -67,7 +67,7 @@ The following shows an example of a conditional sentence making a rule with a co
 prolexa> "If the circuit has the switch and the switch is on then the circuit is complete".
 prolexa> "The circuit has the switch".
 prolexa> "The switch is on".
-prolexa> "Is the circuit complete".
+prolexa> "Explain why the circuit is complete".
 ```
 
 #### 3. Transitive verbs
